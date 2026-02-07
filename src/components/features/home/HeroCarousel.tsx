@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
@@ -34,33 +34,37 @@ const heroSlides = [
 
 export default function HeroCarousel() {
     const [currentSlide, setCurrentSlide] = useState(0)
-    const [isTransitioning, setIsTransitioning] = useState(false)
+    const isTransitioning = useRef(false)
+    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+    const startTimer = useCallback(() => {
+        if (timerRef.current) clearInterval(timerRef.current)
+        timerRef.current = setInterval(() => {
+            setCurrentSlide(prev => (prev + 1) % heroSlides.length)
+        }, 5000)
+    }, [])
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            handleSlideChange((currentSlide + 1) % heroSlides.length)
-        }, 3000)
-
-        return () => clearInterval(interval)
-    }, [currentSlide])
-
-    const handleSlideChange = (index: number) => {
-        if (isTransitioning) return
-        setIsTransitioning(true)
-        setCurrentSlide(index)
-        setTimeout(() => setIsTransitioning(false), 700)
-    }
+        startTimer()
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current)
+        }
+    }, [startTimer])
 
     const goToSlide = (index: number) => {
-        handleSlideChange(index)
+        if (isTransitioning.current) return
+        isTransitioning.current = true
+        setCurrentSlide(index)
+        startTimer()
+        setTimeout(() => { isTransitioning.current = false }, 700)
     }
 
     const nextSlide = () => {
-        handleSlideChange((currentSlide + 1) % heroSlides.length)
+        goToSlide((currentSlide + 1) % heroSlides.length)
     }
 
     const prevSlide = () => {
-        handleSlideChange((currentSlide - 1 + heroSlides.length) % heroSlides.length)
+        goToSlide((currentSlide - 1 + heroSlides.length) % heroSlides.length)
     }
 
     return (
