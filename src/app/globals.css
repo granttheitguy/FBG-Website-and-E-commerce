@@ -1,26 +1,397 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* === FBG Brand Color System === */
+
+  /* Obsidian - Warm charcoal/black (replaces cool grays) */
+  --color-obsidian-950: #0C0A09;
+  --color-obsidian-900: #1C1917;
+  --color-obsidian-800: #292524;
+  --color-obsidian-700: #44403C;
+  --color-obsidian-600: #57534E;
+  --color-obsidian-500: #78716C;
+  --color-obsidian-400: #A8A29E;
+  --color-obsidian-300: #D6D3D1;
+  --color-obsidian-200: #E7E5E4;
+  --color-obsidian-100: #F5F5F4;
+  --color-obsidian-50: #FAFAF9;
+
+  /* Aso Gold - Heritage accent */
+  --color-gold-600: #A67B2E;
+  --color-gold-500: #C8973E;
+  --color-gold-400: #D4A94E;
+  --color-gold-300: #E2C577;
+  --color-gold-200: #EDD89F;
+  --color-gold-100: #F5EDD6;
+  --color-gold-50: #FBF6EA;
+
+  /* Surface - Warm backgrounds */
+  --color-surface-primary: #FDFBF7;
+  --color-surface-secondary: #F7F3ED;
+  --color-surface-elevated: #FFFFFF;
+
+  /* Keep gray aliases for compatibility */
+  --color-gray-50: #FAFAF9;
+  --color-gray-100: #F5F5F4;
+  --color-gray-200: #E7E5E4;
+  --color-gray-300: #D6D3D1;
+  --color-gray-400: #A8A29E;
+  --color-gray-500: #78716C;
+  --color-gray-600: #57534E;
+  --color-gray-700: #44403C;
+  --color-gray-800: #292524;
+  --color-gray-900: #1C1917;
+  --color-gray-950: #0C0A09;
+
+  /* Semantic Colors */
+  --color-success: #16A34A;
+  --color-error: #DC2626;
+  --color-warning: #D97706;
+  --color-info: #2563EB;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* === Global Resets === */
+* {
+  border-color: #E7E5E4;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #FDFBF7;
+  color: #1C1917;
+}
+
+/* === Global Focus-Visible (Accessibility + Brand) === */
+*:focus-visible {
+  outline: 2px solid #C8973E;
+  outline-offset: 2px;
+}
+
+/* Remove focus-visible outline on elements that handle their own */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #C8973E;
+  outline-offset: 2px;
+}
+
+/* === Skip Navigation (Accessibility) === */
+.skip-to-content {
+  position: absolute;
+  top: -48px;
+  left: 0;
+  z-index: 100;
+  background: #1C1917;
+  color: white;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* === Typography Utilities === */
+.text-balance {
+  text-wrap: balance;
+}
+
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* === Motion System === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes kenBurns {
+  from { transform: scale(1.08); }
+  to { transform: scale(1.0); }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes underlineSlide {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* Named animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #E7E5E4 25%, #F5F5F4 50%, #E7E5E4 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease infinite;
+}
+
+.animate-ken-burns {
+  animation: kenBurns 8s ease-out forwards;
+}
+
+.animation-delay-100 {
+  animation-delay: 0.1s;
+  animation-fill-mode: backwards;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+  animation-fill-mode: backwards;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+  animation-fill-mode: backwards;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+  animation-fill-mode: backwards;
+}
+
+/* Motion system tokens as CSS custom properties */
+:root {
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-medium: 350ms;
+  --duration-slow: 500ms;
+  --duration-dramatic: 800ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-dramatic: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* === Luxury Interaction Patterns === */
+
+/* Gold accent underline for links */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #1C1917;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Gold brand accent line */
+.brand-accent-line {
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: #C8973E;
+  margin-top: 16px;
+}
+
+/* Scroll-triggered animation base class */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === CMS Content Prose Styling === */
+.cms-content h2 {
+  font-family: var(--font-serif, 'Playfair Display', serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1C1917;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.cms-content h3 {
+  font-family: var(--font-serif, 'Playfair Display', serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1C1917;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.cms-content h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #292524;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.cms-content p {
+  margin-bottom: 1.25rem;
+  line-height: 1.75;
+  font-size: 0.9375rem;
+}
+
+.cms-content a {
+  color: #C8973E;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.cms-content a:hover {
+  color: #A67B2E;
+}
+
+.cms-content ul,
+.cms-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.cms-content ul {
+  list-style-type: disc;
+}
+
+.cms-content ol {
+  list-style-type: decimal;
+}
+
+.cms-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.75;
+  font-size: 0.9375rem;
+}
+
+.cms-content blockquote {
+  border-left: 3px solid #C8973E;
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #57534E;
+}
+
+.cms-content hr {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid #E7E5E4;
+}
+
+.cms-content img {
+  border-radius: 2px;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+}
+
+.cms-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+.cms-content th,
+.cms-content td {
+  padding: 0.75rem 1rem;
+  border: 1px solid #E7E5E4;
+  text-align: left;
+}
+
+.cms-content th {
+  background-color: #F5F5F4;
+  font-weight: 600;
+  color: #1C1917;
+}
+
+.cms-content strong {
+  font-weight: 600;
+  color: #1C1917;
 }
