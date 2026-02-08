@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { headers } from "next/headers"
 
 export async function GET() {
   const results: Record<string, unknown> = {
@@ -10,7 +11,7 @@ export async function GET() {
   results.env = {
     AUTH_SECRET: !!process.env.AUTH_SECRET,
     NEXTAUTH_SECRET: !!process.env.NEXTAUTH_SECRET,
-    NEXTAUTH_URL: !!process.env.NEXTAUTH_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL || false,
     DATABASE_URL: !!process.env.DATABASE_URL,
     ENCRYPTION_KEY: !!process.env.ENCRYPTION_KEY,
   }
@@ -53,6 +54,29 @@ export async function GET() {
       error: e instanceof Error ? e.message : String(e),
       stack: e instanceof Error ? e.stack?.split("\n").slice(0, 5) : undefined,
     }
+  }
+
+  // 6. Test auth() session call (the actual function that layouts use)
+  try {
+    const { auth } = await import("@/lib/auth")
+    const session = await auth()
+    results.authCall = { ok: true, hasSession: !!session }
+  } catch (e) {
+    results.authCall = {
+      error: e instanceof Error ? e.message : String(e),
+      stack: e instanceof Error ? e.stack?.split("\n").slice(0, 5) : undefined,
+    }
+  }
+
+  // 7. Check if x-next-pathname header propagation works
+  try {
+    const headersList = await headers()
+    results.headers = {
+      "x-next-pathname": headersList.get("x-next-pathname") || "(missing)",
+      "x-invoke-path": headersList.get("x-invoke-path") || "(missing)",
+    }
+  } catch (e) {
+    results.headers = { error: e instanceof Error ? e.message : String(e) }
   }
 
   const allOk =

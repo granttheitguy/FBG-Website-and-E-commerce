@@ -12,7 +12,14 @@ export default async function AdminLayout({
     const pathname = headersList.get("x-next-pathname") || headersList.get("x-invoke-path") || ""
     const isLoginPage = pathname.includes("/admin/login")
 
-    const session = await auth()
+    let session
+    try {
+        session = await auth()
+    } catch {
+        // If auth() fails, allow login page to render
+        if (isLoginPage) return <>{children}</>
+        redirect("/admin/login")
+    }
 
     if (!session?.user || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
         if (isLoginPage) {

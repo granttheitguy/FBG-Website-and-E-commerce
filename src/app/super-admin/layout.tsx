@@ -12,7 +12,13 @@ export default async function SuperAdminLayout({
     const pathname = headersList.get("x-next-pathname") || headersList.get("x-invoke-path") || ""
     const isLoginPage = pathname.includes("/super-admin/login")
 
-    const session = await auth()
+    let session
+    try {
+        session = await auth()
+    } catch {
+        if (isLoginPage) return <>{children}</>
+        redirect("/super-admin/login")
+    }
 
     if (!session?.user || session.user.role !== "SUPER_ADMIN") {
         if (isLoginPage) {

@@ -85,10 +85,12 @@ export default auth((req) => {
         }
     }
 
-    // Set pathname header for server components
-    const response = NextResponse.next()
-    response.headers.set("x-next-pathname", pathname)
-    return response
+    // Set pathname header for server components (must be on request, not response)
+    const requestHeaders = new Headers(req.headers)
+    requestHeaders.set("x-next-pathname", pathname)
+    return NextResponse.next({
+        request: { headers: requestHeaders },
+    })
 })
 
 function getDashboardUrl(role: string): string {

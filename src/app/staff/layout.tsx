@@ -13,7 +13,13 @@ export default async function StaffLayout({
     const pathname = headersList.get("x-next-pathname") || headersList.get("x-invoke-path") || ""
     const isLoginPage = pathname.includes("/staff/login")
 
-    const session = await auth()
+    let session
+    try {
+        session = await auth()
+    } catch {
+        if (isLoginPage) return <>{children}</>
+        redirect("/staff/login")
+    }
 
     // For login page, render children without the layout wrapper
     if (!session?.user || !["STAFF", "ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
