@@ -29,6 +29,7 @@ import {
     Factory,
     Palette,
     Settings,
+    Calculator,
     type LucideIcon,
 } from "lucide-react"
 
@@ -94,6 +95,7 @@ const navSections: NavSection[] = [
     {
         title: "System",
         items: [
+            { href: "/admin/accounting", icon: Calculator, label: "Accounting" },
             { href: "/admin/reports", icon: BarChart3, label: "Reports" },
             { href: "/admin/settings", icon: Settings, label: "Settings" },
         ],
