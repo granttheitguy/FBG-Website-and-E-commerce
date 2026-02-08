@@ -2,6 +2,16 @@ import { handlers } from "@/lib/auth"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest) {
+    // Diagnostic: verify route handler is being reached
+    if (req.nextUrl.searchParams.has("debug")) {
+        return NextResponse.json({
+            reached: true,
+            url: req.url,
+            nextUrl: req.nextUrl.toString(),
+            pathname: req.nextUrl.pathname,
+        })
+    }
+
     try {
         return await handlers.GET(req)
     } catch (e) {
