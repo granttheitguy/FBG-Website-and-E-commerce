@@ -10,6 +10,7 @@ import {
     Settings,
     Store,
     BarChart3,
+    Calculator,
     Tag,
     FolderTree,
     Layers,
@@ -54,6 +55,7 @@ const navSections: NavSection[] = [
         title: "Commerce",
         items: [
             { href: "/super-admin/store-settings", icon: Store, label: "Store Settings" },
+            { href: "/super-admin/accounting", icon: Calculator, label: "Accounting" },
             { href: "/super-admin/reports", icon: BarChart3, label: "Reports" },
             { href: "/super-admin/coupons", icon: Tag, label: "Coupons" },
         ],
