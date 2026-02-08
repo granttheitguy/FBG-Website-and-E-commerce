@@ -6,6 +6,7 @@ import { authConfig } from "./auth.config"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     ...authConfig,
+    debug: process.env.NODE_ENV !== "production",
     providers: [
         Credentials({
             name: "credentials",
